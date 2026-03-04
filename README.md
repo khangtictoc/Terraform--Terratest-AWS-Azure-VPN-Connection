@@ -1,3 +1,11 @@
+- [TerraTest](#terratest)
+  - [Introduction](#introduction)
+  - [Project layout](#project-layout)
+- [TL;DR — Demo \& Installation](#tldr--demo--installation)
+  - [Quick start — deploy with Terraform](#quick-start--deploy-with-terraform)
+  - [Running the Go/TerraTest suite](#running-the-goterratest-suite)
+  - [Experiment - Result On my machine](#experiment---result-on-my-machine)
+
 ## TerraTest
 
 ### Introduction
@@ -191,18 +199,18 @@ go test -v
 go test -run TestSiteToSiteVPN -v
 ```
 
-Environment and credentials for tests
+**Environment and credentials for tests**
 
 - Ensure the test runner has access to AWS and Azure credentials. Typical options:
   - Export AWS credentials (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`) or use an `AWS_PROFILE` configured via the AWS CLI.
   - For Azure, provide `ARM_SUBSCRIPTION_ID`, `ARM_CLIENT_ID`, `ARM_CLIENT_SECRET`, and `ARM_TENANT_ID`, or authenticate with `az login` prior to running tests.
 
-CI notes
+**CI notes**
 
 - In CI, run `terraform init` and `plan/apply` from the `infra` folder with secure environment variables or secrets mounted.
 - Run the Go tests from the `test` folder after infrastructure is provisioned. Consider running tests against a disposable environment and tearing it down after validation.
 
-Where to look
+**Where to look**
 
 - Terraform configs: [infra](infra)
 - Terratest code: [test](test)
