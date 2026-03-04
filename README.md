@@ -2,11 +2,11 @@
 
 ### Introduction
 
-These days, for job recruitments, I believe that you have to get acquainted with some DevOps tools to make your living. In some companies 's needs, they use TerraTest to do testing a Terraform module before releasing this module for public uses by other teams/developers.
+**Context**: These days, for job recruitments, I believe that you have to get acquainted with some DevOps tools to make your living. In some companies 's needs, they use TerraTest to do testing a Terraform module before releasing this module for public uses by other teams/developers.
 
-TerraTest is Go-based integration testing for infrastructure: it runs Terraform, inspects cloud resources, and asserts real-world behavior via go test.
+**TerraTest** is _Go-based_ integration testing for infrastructure: it runs Terraform, inspects cloud resources, and asserts real-world behavior via go test.
 
-This repository demonstrates a site-to-site VPN connection deployment between AWS and Azure using Terraform modules, and includes a Terratest-based Go test suite to validate the connection.
+**Purpose**: This repository demonstrates a site-to-site VPN connection deployment between AWS and Azure using Terraform modules, and includes a Terratest-based Go test suite to validate the connection (between two machines on two cloud network sides).
 
 **Prerequisite Knowledge**
 
@@ -27,16 +27,106 @@ This repository demonstrates a site-to-site VPN connection deployment between AW
 - **infra**: [infra](infra) — Terraform configuration, modules, state, and credential helpers. Used for `terraform init/plan/apply`.
 - **test**: [test](test) — Go Terratest tests (uses `go test`) that validate the deployed VPN connectivity and resources.
 
+**Project Structure**
+
+```
+├── README.md
+├── infra
+│   ├── credentials
+│   │   ├── aws
+│   │   └── azure
+│   │       └── private_key
+│   │           ├── id_rsa
+│   │           └── id_rsa.pub
+│   ├── main.tf
+│   ├── modules
+│   │   ├── aws
+│   │   │   └── virtual-machine
+│   │   │       ├── instance
+│   │   │       │   ├── main.tf
+│   │   │       │   ├── output.tf
+│   │   │       │   └── variables.tf
+│   │   │       ├── keypair
+│   │   │       │   ├── main.tf
+│   │   │       │   ├── ouput.tf
+│   │   │       │   └── variables.tf
+│   │   │       ├── locals.tf
+│   │   │       ├── main.tf
+│   │   │       ├── ouput.tf
+│   │   │       ├── security-group
+│   │   │       │   ├── main.tf
+│   │   │       │   ├── output.tf
+│   │   │       │   └── variables.tf
+│   │   │       └── variable.tf
+│   │   ├── azure
+│   │   │   └── virtual-machine
+│   │   │       ├── locals.tf
+│   │   │       ├── main.tf
+│   │   │       ├── network-interface
+│   │   │       │   ├── main.tf
+│   │   │       │   ├── output.tf
+│   │   │       │   └── variables.tf
+│   │   │       ├── network-security-group
+│   │   │       │   ├── main.tf
+│   │   │       │   ├── output.tf
+│   │   │       │   └── variables.tf
+│   │   │       ├── ouput.tf
+│   │   │       ├── variable.tf
+│   │   │       └── virtual-machine
+│   │   │           ├── main.tf
+│   │   │           ├── output.tf
+│   │   │           └── variables.tf
+│   │   └── s2s-aws-azure-vpn
+│   │       ├── aws
+│   │       │   ├── locals.tf
+│   │       │   ├── main.tf
+│   │       │   ├── output.tf
+│   │       │   └── variables.tf
+│   │       ├── azure
+│   │       │   ├── locals.tf
+│   │       │   ├── main.tf
+│   │       │   ├── output.tf
+│   │       │   └── variables.tf
+│   │       ├── locals.tf
+│   │       ├── main.tf
+│   │       ├── ouput.tf
+│   │       ├── s2s-vpn-connection
+│   │       │   ├── main.tf
+│   │       │   ├── output.tf
+│   │       │   └── variables.tf
+│   │       └── variables.tf
+│   ├── output.tf
+│   ├── providers.tf
+│   ├── terraform.tf
+│   ├── terraform.tfstate
+│   ├── terraform.tfstate.backup
+│   ├── terraform.tfvars
+│   └── variables.tf
+└── test
+    ├── go.mod
+    ├── go.sum
+    ├── sitetositevpn_awsazure_connection_test.go
+    └── utils
+        ├── utils.json.go
+        └── utils.xml.go
+```
+
 ## TL;DR — Demo & Installation
+
+If you're not patient, this part is what you're expecting.
+
+> NOTE: This lab is best implemented on WSL Ubuntu (any version). This is my local setup.
 
 Prerequisites
 
-- **Terraform** (1.0+ recommended)
-- **Go** (1.18+ recommended)
-- **AWS CLI** and **Azure CLI** (or other method to provide cloud credentials)
-- Credentials for both clouds available via environment variables, local CLI login, or files under `infra/credentials/`.
+- **Terraform** cli
+- **Go** cli
+- (Optional, Should-have) **AWS CLI** and **Azure CLI** (or other method to provide cloud credentials)
+- Credentials for both clouds available via environment variables, local CLI login as environment variables, recommend Admin for testing if you're lazy.
 
-Quick start — deploy with Terraform
+> NOTE: For any CLI installation, please refer to my script if you're are getting more lazy. Reference: https://github.com/khangtictoc/Productive-Workspace-Set-Up/blob/main/linux/installation/developer-packages/ubuntu/tools.sh
+
+### Quick start — deploy with Terraform
 
 1. Change into the infra folder:
 
@@ -70,7 +160,7 @@ ARM_SKIP_PROVIDER_REGISTRATION=true terraform plan -var-file=terraform.tfvars
 ARM_SKIP_PROVIDER_REGISTRATION=true terraform apply
 ```
 
-5. When finished, destroy the environment:
+5. (AFTER TEST ONLY) When finished, destroy the environment:
 
 ```bash
 terraform destroy -var-file=terraform.tfvars
@@ -81,7 +171,7 @@ terraform destroy -var-file=terraform.tfvars
 - The `infra` directory contains `terraform.tfvars`, `providers.tf`, and module references. State files (`terraform.tfstate`) are created in `infra/` by default — follow your team/CI practices for remote state.
 - Credentials are present in `infra/credentials/` in this workspace for local testing; do not commit real production sensitive keys to source control. Use environment variables or secure secret stores in CI. => Private key in this repo is for labs, has no impact to any production/personal data.
 
-Running the Go/TerraTest suite
+### Running the Go/TerraTest suite
 
 1. Change into the `test` folder:
 
@@ -106,7 +196,6 @@ Environment and credentials for tests
 - Ensure the test runner has access to AWS and Azure credentials. Typical options:
   - Export AWS credentials (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`) or use an `AWS_PROFILE` configured via the AWS CLI.
   - For Azure, provide `ARM_SUBSCRIPTION_ID`, `ARM_CLIENT_ID`, `ARM_CLIENT_SECRET`, and `ARM_TENANT_ID`, or authenticate with `az login` prior to running tests.
-  - Tests may also read credential files from `infra/credentials/` if configured accordingly.
 
 CI notes
 
@@ -119,4 +208,4 @@ Where to look
 - Terratest code: [test](test)
 - Terraform modules: [infra/modules](infra/modules)
 
-If you'd like, I can also add a minimal `Makefile` or GitHub Actions workflow to automate `terraform` and `go test` runs — want me to add that?
+### Experiment - Result On my machine
