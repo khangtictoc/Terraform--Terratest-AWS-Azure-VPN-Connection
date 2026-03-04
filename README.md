@@ -119,22 +119,32 @@
         └── utils.xml.go
 ```
 
-## TL;DR — Demo & Installation
-
-If you're not patient, this part is what you're expecting.
+## TL;DR — (Prerequesite) Installation
 
 > NOTE: This lab is best implemented on WSL Ubuntu (any version). This is my local setup.
 
-Prerequisites
+Must-have
 
 - **Terraform** cli
 - **Go** cli
-- (Optional, Should-have) **AWS CLI** and **Azure CLI** (or other method to provide cloud credentials)
+- (Optional) **AWS CLI** and **Azure CLI** (or other method to provide cloud credentials) for debugs.
 - Credentials for both clouds available via environment variables, local CLI login as environment variables, recommend Admin for testing if you're lazy.
 
 > NOTE: For any CLI installation, please refer to my script if you're are getting more lazy. Reference: https://github.com/khangtictoc/Productive-Workspace-Set-Up/blob/main/linux/installation/developer-packages/ubuntu/tools.sh
 
+**Environment and credentials for tests**
+
+- Ensure the test runner has access to AWS and Azure credentials. Typical options:
+  - Export AWS credentials (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`) or use an `AWS_PROFILE` configured via the AWS CLI.
+  - For Azure, provide `ARM_SUBSCRIPTION_ID`, `ARM_CLIENT_ID`, `ARM_CLIENT_SECRET`, and `ARM_TENANT_ID`, or authenticate with `az login` prior to running tests.
+
+<img width="901" height="187" alt="image" src="https://github.com/user-attachments/assets/5f5cd8d2-800c-4bf1-b758-6779c4c2b831" />
+
+## TL;DR — Quickstart Demo
+
 ### Quick start — deploy with Terraform
+
+If you're not patient, this part is what you're expecting.
 
 1. Change into the infra folder:
 
@@ -198,14 +208,6 @@ go test -v
 ```bash
 go test -run TestSiteToSiteVPN -v
 ```
-
-**Environment and credentials for tests**
-
-- Ensure the test runner has access to AWS and Azure credentials. Typical options:
-  - Export AWS credentials (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`) or use an `AWS_PROFILE` configured via the AWS CLI.
-  - For Azure, provide `ARM_SUBSCRIPTION_ID`, `ARM_CLIENT_ID`, `ARM_CLIENT_SECRET`, and `ARM_TENANT_ID`, or authenticate with `az login` prior to running tests.
-
-<img width="901" height="187" alt="image" src="https://github.com/user-attachments/assets/5f5cd8d2-800c-4bf1-b758-6779c4c2b831" />
 
 **CI notes**
 
