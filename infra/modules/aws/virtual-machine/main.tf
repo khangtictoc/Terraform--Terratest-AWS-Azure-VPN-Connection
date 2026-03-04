@@ -29,17 +29,17 @@ resource "local_file" "aws_private_ssh_key" {
     filename = "credentials/aws/private_key"
 }
 
-resource "null_resource" "add_host_key" {
-  triggers = {
-    always_run = local_file.aws_private_ssh_key.id
-  }
+# resource "null_resource" "add_host_key" {
+#   triggers = {
+#     always_run = local_file.aws_private_ssh_key.id
+#   }
 
-  provisioner "local-exec" {
-    command = <<EOT
-      icacls ./credentials/aws/private_key /inheritance:r /grant:r "$(whoami):(R,M)" "Administrators:F" "SYSTEM:(F)"
-    EOT
-    interpreter = ["PowerShell", "-Command"]
-  }
+#   provisioner "local-exec" {
+#     command = <<EOT
+#       icacls ./credentials/aws/private_key /inheritance:r /grant:r "$(whoami):(R,M)" "Administrators:F" "SYSTEM:(F)"
+#     EOT
+#     interpreter = ["PowerShell", "-Command"]
+#   }
 
-  depends_on = [ local_file.aws_private_ssh_key ]
-}
+#   depends_on = [ local_file.aws_private_ssh_key ]
+# }

@@ -7,24 +7,18 @@ tags = {
 }
 
 ### AZURE ###
-az_subscription_id = ""
-az_tenant_id = ""
-az_client_id     = ""
-az_client_secret = ""
 
 ### AWS ###
-aws_access_key = ""
-aws_secret_key = ""
 region = "us-east-1"
 
 ### Azure working space ###
 resource_group = [
   {
-    name = "VPNSite2SiteDemo",
+    name     = "VPNSite2SiteDemo",
     location = "East Asia"
   },
   {
-    name = "VPNSite2SiteDemo2",
+    name     = "VPNSite2SiteDemo2",
     location = "East Asia"
   }
 ]
@@ -34,12 +28,12 @@ s2s_vpn_connection_config = {
   # AWS VPN Network
   aws_vpn_network = {
     vpc = {
-      name = "vpn-vpc"
+      name       = "vpn-vpc"
       cidr_block = "192.168.0.0/16"
       subnet = [
         {
           cidr_block = "192.168.1.0/24"
-          name = "vpn-subnet"
+          name       = "vpn-subnet"
         }
       ]
     }
@@ -55,35 +49,36 @@ s2s_vpn_connection_config = {
   azure_vpn_network = [
     {
       virtual_network = {
-        name = "VpnVnet"
+        name          = "VpnVnet"
         address_space = ["172.16.0.0/16"]
         subnet = [
           {
-            name = "GatewaySubnet"
+            name           = "GatewaySubnet"
             address_prefix = ["172.16.0.0/27"]
           },
           {
-            name = "AppSubnet"
+            name           = "AppSubnet"
             address_prefix = ["172.16.1.0/24"]
           },
           {
-            name = "AppGatewaySubnet"
+            name           = "AppGatewaySubnet"
             address_prefix = ["172.16.2.0/24"]
           }
         ]
       }
       public_ip = {
-        name = "VNet-Gateway"
+        name              = "VNet-Gateway"
         allocation_method = "Static"
-        sku = "Standard"
+        sku               = "Standard"
+        zones             = ["1", "2", "3"]
       }
       virtual_network_gateway = {
-        name = "Vnet-Gateway-Demo"
-        type = "Vpn"
-        vpn_type = "RouteBased"
+        name          = "Vnet-Gateway-Demo"
+        type          = "Vpn"
+        vpn_type      = "RouteBased"
         active_active = false
-        enable_bgp = false
-        sku = "VpnGw1"
+        enable_bgp    = false
+        sku           = "VpnGw1AZ"
         ip_configuration = {
           name                          = "Vnet-Gateway-IP-Config"
           private_ip_address_allocation = "Dynamic"
@@ -92,38 +87,39 @@ s2s_vpn_connection_config = {
     },
     {
       virtual_network = {
-        name = "VpnVnet2"
+        name          = "VpnVnet2"
         address_space = ["10.10.0.0/16"]
         subnet = [
           {
-            name = "GatewaySubnet"
+            name           = "GatewaySubnet"
             address_prefix = ["10.10.0.0/27"]
           },
           {
-            name = "AppSubnet"
+            name           = "AppSubnet"
             address_prefix = ["10.10.1.0/24"]
           },
           {
-            name = "AppGatewaySubnet"
+            name           = "AppGatewaySubnet"
             address_prefix = ["10.10.2.0/24"]
           }
         ]
       }
 
       public_ip = {
-        name = "VNet-Gateway2"
+        name              = "VNet-Gateway2"
         allocation_method = "Static"
-        sku = "Standard"
+        sku               = "Standard"
+        zones             = ["1", "2", "3"]
       }
 
       virtual_network_gateway = {
-        name = "Vnet-Gateway-Demo2"
-        type = "Vpn"
+        name     = "Vnet-Gateway-Demo2"
+        type     = "Vpn"
         vpn_type = "RouteBased"
 
         active_active = false
-        enable_bgp = false
-        sku = "VpnGw1"
+        enable_bgp    = false
+        sku           = "VpnGw1AZ"
 
         ip_configuration = {
           name                          = "Vnet-Gateway-IP-Config2"
@@ -136,20 +132,20 @@ s2s_vpn_connection_config = {
   vpn_connection_config = [
     {
       aws_customer_gateway = {
-        name = "my-customer-gateway"
+        name    = "my-customer-gateway"
         bgp_asn = 65000
-        type = "ipsec.1"
+        type    = "ipsec.1"
       }
       aws_vpn_connection = {
-        name = "my-vpn-connection"
-        type = "ipsec.1"
-        static_routes_only = true
+        name                     = "my-vpn-connection"
+        type                     = "ipsec.1"
+        static_routes_only       = true
         static_route_cidr_blocks = "172.16.0.0/16"
-        local_ipv4_network_cidr = "0.0.0.0/0"
+        local_ipv4_network_cidr  = "0.0.0.0/0"
         remote_ipv4_network_cidr = "0.0.0.0/0"
       }
       azure_local_network_gateway = {
-        name = "myLocalGW"
+        name          = "myLocalGW"
         address_space = ["192.168.0.0/16"]
       }
       azure_virtual_network_gateway_connection = {
@@ -159,20 +155,20 @@ s2s_vpn_connection_config = {
     },
     {
       aws_customer_gateway = {
-        name = "my-customer-gateway2"
+        name    = "my-customer-gateway2"
         bgp_asn = 65000
-        type = "ipsec.1"
+        type    = "ipsec.1"
       }
       aws_vpn_connection = {
-        name = "my-vpn-connection2"
-        type = "ipsec.1"
-        static_routes_only = true
+        name                     = "my-vpn-connection2"
+        type                     = "ipsec.1"
+        static_routes_only       = true
         static_route_cidr_blocks = "10.10.0.0/16"
-        local_ipv4_network_cidr = "0.0.0.0/0"
+        local_ipv4_network_cidr  = "0.0.0.0/0"
         remote_ipv4_network_cidr = "0.0.0.0/0"
       }
       azure_local_network_gateway = {
-        name = "myLocalGW2"
+        name          = "myLocalGW2"
         address_space = ["192.168.0.0/16"]
       }
       azure_virtual_network_gateway_connection = {
@@ -190,10 +186,10 @@ aws_vm_config_demo = [
       name = "mykey"
     }
     ec2 = {
-      name = "target01"
-      ami_id = "ami-06aa3f7caf3a30282"
-      instance_type = "t2.medium"
-      user_data_file = null
+      name                        = "target01"
+      ami_id                      = "ami-06aa3f7caf3a30282"
+      instance_type               = "t2.medium"
+      user_data_file              = null
       associate_public_ip_address = true
 
       ebs_block_device = {
@@ -205,7 +201,7 @@ aws_vm_config_demo = [
         market_type = "spot"
         spot_options = {
           instance_interruption_behavior = "terminate"
-          max_price = null
+          max_price                      = null
         }
       }
     }
@@ -235,9 +231,9 @@ aws_vm_config_demo = [
 azure_vm_config_demo = [
   {
     virtual_machine = {
-      name                  = "source01"
-      size                  = "Standard_F1s"
-      admin_username        = "azureadmin"
+      name           = "source01"
+      size           = "Standard_F1s"
+      admin_username = "azureadmin"
       computer_name  = "myLinuxAgent01"
       os_disk = {
         name                 = "myOsDisk01"
@@ -262,7 +258,7 @@ azure_vm_config_demo = [
         private_ip_address_allocation = "Dynamic"
       }
       public_ip = {
-        name = "myPublicIP01"
+        name              = "myPublicIP01"
         allocation_method = "Dynamic"
       }
     }
@@ -296,9 +292,9 @@ azure_vm_config_demo = [
   },
   {
     virtual_machine = {
-      name                  = "source02"
-      size                  = "Standard_F1s"
-      admin_username        = "azureadmin"
+      name           = "source02"
+      size           = "Standard_F1s"
+      admin_username = "azureadmin"
       computer_name  = "myLinuxAgent02"
       os_disk = {
         name                 = "myOsDisk02"
@@ -323,7 +319,7 @@ azure_vm_config_demo = [
         private_ip_address_allocation = "Dynamic"
       }
       public_ip = {
-        name = "myPublicIP02"
+        name              = "myPublicIP02"
         allocation_method = "Dynamic"
       }
     }

@@ -22,6 +22,7 @@ resource "azurerm_public_ip" "vpn_public_ip" {
     name                = var.azure_vpn_network.public_ip.name
     sku                 = var.azure_vpn_network.public_ip.sku
     allocation_method   = var.azure_vpn_network.public_ip.allocation_method
+    zones               = var.azure_vpn_network.public_ip.zones
 
     tags = var.tags
     resource_group_name = var.resource_group.name
