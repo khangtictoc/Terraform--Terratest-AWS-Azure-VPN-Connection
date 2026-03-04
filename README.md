@@ -205,6 +205,8 @@ go test -run TestSiteToSiteVPN -v
   - Export AWS credentials (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`) or use an `AWS_PROFILE` configured via the AWS CLI.
   - For Azure, provide `ARM_SUBSCRIPTION_ID`, `ARM_CLIENT_ID`, `ARM_CLIENT_SECRET`, and `ARM_TENANT_ID`, or authenticate with `az login` prior to running tests.
 
+<img width="901" height="187" alt="image" src="https://github.com/user-attachments/assets/5f5cd8d2-800c-4bf1-b758-6779c4c2b831" />
+
 **CI notes**
 
 - In CI, run `terraform init` and `plan/apply` from the `infra` folder with secure environment variables or secrets mounted.
